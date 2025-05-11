@@ -1,0 +1,90 @@
+package rules
+
+import com.udea.aerolinea.model.Passenger
+import com.udea.aerolinea.model.Flight
+import com.udea.aerolinea.model.Luggage
+import com.udea.aerolinea.model.FlightBenefits
+
+rule "UpgradeToBusinessClassForFrequentFlyersWithDelays"
+when
+    $p : Passenger(membershipLevel == "Gold" || membershipLevel == "Platinum")
+    $f : Flight(delayMinutes > 60)
+    $b : FlightBenefits()
+then
+    $b.setUpgradedToBusiness(true);
+end
+
+rule "PriorityCheckInForSeniors"
+when
+    $p : Passenger(age > 65)
+    $b : FlightBenefits()
+then
+    $b.setPriorityCheckIn(true);
+end
+
+rule "DiscountForLightLuggage"
+when
+    $l : Luggage(weightKg < 10)
+    $b : FlightBenefits()
+then
+    $b.setDiscount(0.1);
+end
+
+rule "DenyUpgradeForOverweightLuggage"
+when
+    $l : Luggage(weightKg > 23)
+    $b : FlightBenefits()
+then
+    $b.setUpgradeEligible(false);
+end
+
+rule "AssignEmergencyExitSeatToYoungAdults"
+when
+    $p : Passenger(age >= 18 && age <= 40, seatPreference == "Any")
+    $f : Flight(emergencyExitAvailable == true)
+    $b : FlightBenefits()
+then
+    $b.setEmergencyExitAssigned(true);
+end
+
+rule "CompensationForExtremeDelays"
+when
+    $f : Flight(delayMinutes > 180)
+    $b : FlightBenefits()
+then
+    $b.setCompensation(200.0);
+end
+
+rule "ExtraLoyaltyPointsForLongFlights"
+when
+    $p : Passenger(membershipLevel != "Basic")
+    $f : Flight(durationHours > 5)
+    $b : FlightBenefits()
+then
+    $b.setExtraLoyaltyPoints(500);
+end
+
+rule "RestrictLuggageOnShortFlights"
+when
+    $f : Flight(durationHours < 2)
+    $l : Luggage(weightKg > 15)
+    $b : FlightBenefits()
+then
+    $b.setLuggageAccepted(false);
+end
+
+rule "VipLoungeAccessForPlatinumMembers"
+when
+    $p : Passenger(membershipLevel == "Platinum")
+    $b : FlightBenefits()
+then
+    $b.setVipLoungeAccess(true);
+end
+
+rule "PreferentialSeatForFamilies"
+when
+    $p : Passenger(travelsWithChildren == true, seatPreference == "Any")
+    $b : FlightBenefits()
+then
+    $b.setFamilyPreferentialSeat(true);
+end

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Evaluación de Beneficios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-top: 30px;
+        }
+
+        h3 {
+            color: #0056b3;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            margin-top: 0;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .results {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .results h2 {
+            text-align: center;
+            color: #28a745;
+        }
+
+        .results ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .results li {
+            background-color: #f8f9fa;
+            margin: 8px 0;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .results li:nth-child(odd) {
+            background-color: #e9ecef;
+        }
+
+    </style>
+</head>
+<body>
+<h1>Formulario de Evaluación de Vuelo</h1>
+
+<form th:action="@{/formulario}" method="post">
+    <h3>Pasajero</h3>
+    <label for="name">Nombre:</label>
+    <input type="text" name="name" required id="name"><br>
+
+    <label for="age">Edad:</label>
+    <input type="number" name="age" required id="age"><br>
+
+    <label for="membershipLevel">Nivel de membresía:</label>
+    <select name="membershipLevel" id="membershipLevel">
+        <option>Basic</option>
+        <option>Gold</option>
+        <option>Platinum</option>
+    </select><br>
+
+    <label for="travelsWithChildren">Viaja con niños:</label>
+    <input type="checkbox" name="travelsWithChildren" id="travelsWithChildren"><br>
+
+    <label for="seatPreference">Preferencia de asiento:</label>
+    <select name="seatPreference" id="seatPreference">
+        <option>Any</option>
+        <option>Window</option>
+        <option>Aisle</option>
+    </select><br>
+
+    <h3>Vuelo</h3>
+    <label for="delayMinutes">Retraso (min):</label>
+    <input type="number" name="delayMinutes" id="delayMinutes"><br>
+
+    <label for="durationHours">Duración (horas):</label>
+    <input type="number" name="durationHours" step="0.1" id="durationHours"><br>
+
+    <label for="emergencyExitAvailable">¿Salida de emergencia disponible?</label>
+    <input type="checkbox" name="emergencyExitAvailable" id="emergencyExitAvailable"><br>
+
+    <h3>Equipaje</h3>
+    <label for="weightKg">Peso (kg):</label>
+    <input type="number" name="weightKg" step="0.1" id="weightKg"><br><br>
+
+    <button type="submit">Evaluar</button>
+</form>
+
+<div th:if="${benefits != null}" class="results">
+    <h2>Beneficios Aplicados</h2>
+    <ul>
+        <li th:text="'Ascenso a ejecutiva: ' + ${benefits.upgradedToBusiness}"></li>
+        <li th:text="'Check-in prioritario: ' + ${benefits.priorityCheckIn}"></li>
+        <li th:text="'Salón VIP: ' + ${benefits.vipLoungeAccess}"></li>
+        <li th:text="'Asiento de emergencia: ' + ${benefits.emergencyExitAssigned}"></li>
+        <li th:text="'Asiento familiar preferente: ' + ${benefits.familyPreferentialSeat}"></li>
+        <li th:text="'Equipaje aceptado: ' + ${benefits.luggageAccepted}"></li>
+        <li th:text="'Elegible para upgrade: ' + ${benefits.upgradeEligible}"></li>
+        <li th:text="'Descuento: ' + ${benefits.discount}"></li>
+        <li th:text="'Puntos extra: ' + ${benefits.extraLoyaltyPoints}"></li>
+        <li th:text="'Compensación: $' + ${benefits.compensation}"></li>
+    </ul>
+</div>
+</body>
+</html>
